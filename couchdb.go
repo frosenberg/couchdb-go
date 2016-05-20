@@ -24,19 +24,15 @@ type Database struct {
 
 //Creates a regular http connection.
 //Timeout sets the timeout for the http Client
-func NewConnection(address string, port int,
-	timeout time.Duration) (*Connection, error) {
+func NewConnection(address string, timeout time.Duration) (*Connection, error) {
 
-	url := "http://" + address + ":" + strconv.Itoa(port)
+	url := "http://" + address
 	return createConnection(url, timeout)
 }
 
-//Creates an https connection.
-//Timeout sets the timeout for the http Client
-func NewSSLConnection(address string, port int,
-	timeout time.Duration) (*Connection, error) {
+func NewSSLConnection(address string, timeout time.Duration) (*Connection, error) {
 
-	url := "https://" + address + ":" + strconv.Itoa(port)
+	url := "https://" + address
 	return createConnection(url, timeout)
 }
 
@@ -342,13 +338,13 @@ func (db *Database) Compact() (resp string, e error) {
 
 	var headers = make(map[string]string)
 	headers["Accept"] = "application/json"
-    headers["Content-Type"] = "application/json"
+	headers["Content-Type"] = "application/json"
 
 	emtpyBody := ""
 
 	dbResponse, err := db.connection.request("POST", url, strings.NewReader(emtpyBody), headers, db.auth)
-    defer dbResponse.Body.Close()
-    
+	defer dbResponse.Body.Close()
+
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(dbResponse.Body)
 	strResp := buf.String()
