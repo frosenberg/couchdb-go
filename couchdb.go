@@ -77,7 +77,11 @@ func (conn *Connection) CreateDB(name string, auth Auth) error {
 	if err != nil {
 		return err
 	}
-	resp, err := conn.request("PUT", url, nil, nil, auth)
+
+	headers := make(map[string]string)
+	headers["Content-Length"] = "0" // FR: fixes a proxy issue we are facing
+
+	resp, err := conn.request("PUT", url, nil, headers, auth)
 	if err == nil {
 		resp.Body.Close()
 	}
